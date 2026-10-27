@@ -1,8 +1,9 @@
 include Makefile.files
 
-.PHONY: all vcs_comp vcs_run vcs_verdi vcs_wave vcs_gui help clean
+.PHONY: all vcs_comp vcs_run vcs_verdi vcs_wave vcs_gui vcs_cov help clean
 
-UVM_TEST ?= minisoc_rst_clk_test
+#UVM_TEST ?= minisoc_rst_clk_test
+UVM_TEST ?= minisoc_smoke_test
 
 all: vcs_comp vcs_run
 
@@ -21,6 +22,9 @@ vcs_run:
 vcs_gui:
 	./simv +UVM_TESTNAME=$(UVM_TEST) -gui &
 
+vcs_cov:
+	verdi -cov -covdir simv.vdb -dbdir simv.daidir &
+
 vcs_verdi:
 	verdi -ssf waves.fsdb &
 
@@ -33,10 +37,11 @@ help:
 	@echo '  make vcs_gui [UVM_TEST=nome]   : Executa a simulacao com a GUI'
 	@echo '  make vcs_verdi                 : Abre o Verdi com a waveform'
 	@echo '  make vcs_nwave                 : Abre apenas o nWave'
+	@echo '  make vcs_cov                   : Abre o Coverage com o Verdi'
 	@echo '  make clean                     : Remove arquivos temporarios'
 
 clean:
 	rm -rf csrc simv.daidir simv.cst simv.vdb *.log
 	rm -rf simv ucli.key *.vpd *.vcd verdiLog *.fsdb novas.* vc_hdrs.h DVEfiles
-	rm -rf nWaveLog vdCovLog
+	rm -rf nWaveLog vdCovLog urgReport
 	rm -f .fsm.sch.verilog.xml vdCov.conf
