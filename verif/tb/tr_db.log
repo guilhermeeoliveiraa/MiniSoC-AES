@@ -1,2 +1,0 @@
-  CREATE_STREAM @0 {NAME:clk_seq T:Transactions SCOPE:uvm_test_top.env.clk_agent.sqr STREAM:1259}
-  CREATE_STREAM @6000 {NAME:rst_seq T:Transactions SCOPE:uvm_test_top.env.rst_agent.sqr STREAM:1338}
