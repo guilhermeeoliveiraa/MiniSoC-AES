@@ -1,0 +1,146 @@
+Command: /home/joao.oliveira/Documentos/minisoc-tag-v1.0/verif/tb/./simv -cm line+cond+branch+tgl+fsm +UVM_TESTNAME=minisoc_rst_clk_test -l vcs_run.log
+Chronologic VCS simulator copyright 1991-2025
+Contains Synopsys proprietary information.
+Compiler version X-2025.06-SP2_Full64; Runtime version X-2025.06-SP2_Full64;  Oct 27 03:30 2026
+UVM_INFO /Tools/synopsys/vcs/X-2025.06-SP2/etc/uvm-1.2/base/uvm_root.svh(407) @ 0: reporter [UVM/RELNOTES] 
+----------------------------------------------------------------
+UVM-1.2.Synopsys
+(C) 2007-2014 Mentor Graphics Corporation
+(C) 2007-2014 Cadence Design Systems, Inc.
+(C) 2006-2014 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+(C) 2013-2014 NVIDIA Corporation
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+[TB_TOP] Passou pelo inicio do initial block!
+UVM_INFO @ 0: reporter [RNTST] Running test minisoc_rst_clk_test...
+*Verdi* Loading libsscore_vcs202506.so
+FSDB Dumper for VCS, Release Verdi_X-2025.06-SP2, Linux x86_64/64bit, 11/27/2025
+(C) 1996 - 2025 by Synopsys, Inc.
+*Verdi* : Create FSDB file 'waves.fsdb'
+*Verdi* : Begin traversing the scope (tb_top), layer (0).
+*Verdi* : Enable +all dumping.
+*Verdi* : End of traversing.
+UVM_INFO /Tools/synopsys/vcs/X-2025.06-SP2/etc/uvm-1.2/base/uvm_root.svh(594) @ 0: reporter [UVMTOP] UVM testbench topology:
+----------------------------------------------------------------
+Name                         Type                    Size  Value
+----------------------------------------------------------------
+uvm_test_top                 minisoc_rst_clk_test    -     @357 
+  env                        minisoc_env             -     @375 
+    clk_agent                clk_agt                 -     @387 
+      drv                    clk_drv                 -     @463 
+        rsp_port             uvm_analysis_port       -     @482 
+        seq_item_port        uvm_seq_item_pull_port  -     @472 
+      mon                    clk_mon                 -     @444 
+        item_collected_port  uvm_analysis_port       -     @453 
+      sqr                    clk_sqr                 -     @492 
+        rsp_export           uvm_analysis_export     -     @501 
+        seq_item_export      uvm_seq_item_pull_imp   -     @619 
+        arbitration_queue    array                   0     -    
+        lock_queue           array                   0     -    
+        num_last_reqs        integral                32    'd1  
+        num_last_rsps        integral                32    'd1  
+    mem_agent                mem_data_agt            -     @414 
+      ap                     uvm_analysis_port       -     @638 
+      drv                    mem_data_drv            -     @667 
+        rsp_port             uvm_analysis_port       -     @686 
+        seq_item_port        uvm_seq_item_pull_port  -     @676 
+      mon                    mem_data_mon            -     @648 
+        ap                   uvm_analysis_port       -     @657 
+      sqr                    mem_data_sqr            -     @696 
+        rsp_export           uvm_analysis_export     -     @705 
+        seq_item_export      uvm_seq_item_pull_imp   -     @823 
+        arbitration_queue    array                   0     -    
+        lock_queue           array                   0     -    
+        num_last_reqs        integral                32    'd1  
+        num_last_rsps        integral                32    'd1  
+    rst_agent                rst_agt                 -     @396 
+      drv                    rst_drv                 -     @861 
+        rsp_port             uvm_analysis_port       -     @880 
+        seq_item_port        uvm_seq_item_pull_port  -     @870 
+      mon                    rst_mon                 -     @842 
+        item_collected_port  uvm_analysis_port       -     @851 
+      sqr                    rst_sqr                 -     @890 
+        rsp_export           uvm_analysis_export     -     @899 
+        seq_item_export      uvm_seq_item_pull_imp   -     @1017
+        arbitration_queue    array                   0     -    
+        lock_queue           array                   0     -    
+        num_last_reqs        integral                32    'd1  
+        num_last_rsps        integral                32    'd1  
+    scb                      minisoc_scb             -     @423 
+      mem_export             uvm_analysis_imp_mem    -     @432 
+    spi_agent                spi_agt                 -     @405 
+      drv                    spi_drv                 -     @1191
+        rsp_port             uvm_analysis_port       -     @1210
+        seq_item_port        uvm_seq_item_pull_port  -     @1200
+      mon                    spi_mon                 -     @1035
+        item_collected_port  uvm_analysis_port       -     @1044
+      sqr                    spi_sqr                 -     @1054
+        rsp_export           uvm_analysis_export     -     @1063
+        seq_item_export      uvm_seq_item_pull_imp   -     @1181
+        arbitration_queue    array                   0     -    
+        lock_queue           array                   0     -    
+        num_last_reqs        integral                32    'd1  
+        num_last_rsps        integral                32    'd1  
+----------------------------------------------------------------
+
+UVM_INFO ./tests/minisoc_base_test.sv(35) @ 0: uvm_test_top [BASE_TEST] Starting execution of test: minisoc_rst_clk_test
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(52) @ 0: uvm_test_top [T1] T1 - Clock: verificando periodo do clock
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(67) @ 6000: uvm_test_top [T1] PASS: periodo medido = 0.500 ns
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(77) @ 6000: uvm_test_top [T2] T2 - Reset global: verificando assercao
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(90) @ 6000: uvm_test_top [T2] Reset ativo: rst_n = 0
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(94) @ 8000: uvm_test_top [T3] Reset liberado: rst_n = 1
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(100) @ 9000: uvm_test_top [T2] PASS: reset foi aplicado
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(106) @ 9000: uvm_test_top [T3] T3 - Reset: verificando liberacao
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(110) @ 9000: uvm_test_top [T3] PASS: reset foi liberado
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(116) @ 9000: uvm_test_top [TEST_SUMMARY] ========== RESUMO DOS TESTES ==========
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(117) @ 9000: uvm_test_top [TEST_SUMMARY] T1 - Clock: PASS
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(119) @ 9000: uvm_test_top [TEST_SUMMARY] T2 - Reset global: PASS
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(121) @ 9000: uvm_test_top [TEST_SUMMARY] T3 - Liberacao do reset: PASS
+UVM_INFO ./tests/minisoc_rst_clk_test.sv(123) @ 9000: uvm_test_top [TEST_SUMMARY] =======================================
+UVM_INFO /Tools/synopsys/vcs/X-2025.06-SP2/etc/uvm-1.2/base/uvm_objection.svh(1276) @ 9000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+UVM_INFO ./env/minisoc_scb.sv(92) @ 9000: uvm_test_top.env.scb [SCB_SUMMARY] Relatorio de Verificacao AES: 0 Sucessos, 0 Erros
+UVM_INFO /Tools/synopsys/vcs/X-2025.06-SP2/etc/uvm-1.2/base/uvm_report_server.svh(904) @ 9000: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :   19
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[BASE_TEST]     1
+[RNTST]     1
+[SCB_SUMMARY]     1
+[T1]     2
+[T2]     3
+[T3]     3
+[TEST_DONE]     1
+[TEST_SUMMARY]     5
+[UVM/RELNOTES]     1
+[UVMTOP]     1
+
+$finish called from file "/Tools/synopsys/vcs/X-2025.06-SP2/etc/uvm-1.2/base/uvm_root.svh", line 532.
+$finish at simulation time                 8500
+"./top_assertions.sv", 29: tb_top.u_top_assertions.c_reset_asserted, 7 attempts, 1 match
+"./top_assertions.sv", 30: tb_top.u_top_assertions.c_spi_transaction_start, 7 attempts, 0 match
+
+---------------------------------------------------------------------------
+VCS Coverage Metrics: during simulation line, cond, FSM, branch, tgl was monitored
+---------------------------------------------------------------------------
+           V C S   S i m u l a t i o n   R e p o r t 
+Time: 8500 ps
+CPU Time:      0.680 seconds;       Data structure size:   0.7Mb
+Tue Oct 27 03:30:29 2026

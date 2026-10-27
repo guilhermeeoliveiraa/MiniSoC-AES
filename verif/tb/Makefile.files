@@ -1,0 +1,50 @@
+RTL_DIR = ../../frontend/rtl
+TB_DIR  = .
+
+MINISOC_TOP_FILES = \
+	$(RTL_DIR)/minisoc_aes/minisoc_aes_key_exp.sv \
+	$(RTL_DIR)/minisoc_aes/minisoc_aes_dp.sv \
+	$(RTL_DIR)/minisoc_aes/minisoc_aes_top.sv \
+	$(RTL_DIR)/minisoc_mem/minisoc_memory.sv \
+	$(RTL_DIR)/minisoc_pll/minisoc_pll_mock.sv \
+	$(RTL_DIR)/minisoc_spi/minisoc_spi.sv \
+	$(RTL_DIR)/minisoc_top.sv \
+
+MINISOC_TB_IFS = \
+	$(TB_DIR)/if/clk_if.sv \
+	$(TB_DIR)/if/rst_if.sv \
+	$(TB_DIR)/if/spi_if.sv \
+	$(TB_DIR)/if/mem_data_if.sv \
+
+MINISOC_TB_PKGS = \
+	$(TB_DIR)/agents/clk_agent/clk_agent_pkg.sv \
+	$(TB_DIR)/agents/rst_agent/rst_agent_pkg.sv \
+	$(TB_DIR)/agents/spi_agent/spi_agent_pkg.sv \
+	$(TB_DIR)/agents/mem_data_agent/mem_data_agent_pkg.sv \
+	$(TB_DIR)/env/minisoc_env_pkg.sv \
+	$(TB_DIR)/sequences/minisoc_seq_pkg.sv \
+	$(TB_DIR)/tests/minisoc_test_pkg.sv \
+
+MINISOC_TOP_TB = \
+	$(TB_DIR)/top_assertions.sv \
+	$(TB_DIR)/top_tb.sv
+
+MINISOC_TB_FILES = $(MINISOC_TOP_FILES)$(MINISOC_TB_IFS) $(MINISOC_TB_PKGS)$(MINISOC_TOP_TB)
+
+VCS_INCDIRS = \
+	+incdir+$(TB_DIR)/include \
+	+incdir+$(TB_DIR)/agents/clk_agent \
+	+incdir+$(TB_DIR)/agents/rst_agent \
+	+incdir+$(TB_DIR)/agents/spi_agent \
+	+incdir+$(TB_DIR)/agents/mem_data_agent \
+	+incdir+$(TB_DIR)/env \
+	+incdir+$(TB_DIR)/sequences \
+	+incdir+$(TB_DIR)/tests
+
+VCS_KDB       = -kdb
+VERDI_HOME   ?= /Tools/synopsys/verdi/X-2025.06-SP2
+VCS_DEBUG     = -debug_access+all
+VCS_SEED      = +ntb_random_seed=1
+VCS_UVM_FLAGS = -ntb_opts uvm-1.2
+VCS_FLAGS = -full64 -sverilog $(VCS_UVM_FLAGS) -l ./vcs_logger.log $(VCS_KDB) $(VCS_DEBUG) -timescale=1ns/1ps -cm line+cond+branch+tgl+fsm
+VCS_CPP_FLAGS = -CFLAGS "-std=c++11 -Irefmod -I$(HOME) -I$(HOME)/cryptopp" -LDFLAGS "-Wl,--whole-archive $(HOME)/cryptopp/libcryptopp.a -Wl,--no-whole-archive"
