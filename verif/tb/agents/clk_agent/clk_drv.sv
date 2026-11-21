@@ -7,7 +7,7 @@ class clk_drv extends uvm_driver #(clk_item);
   virtual clk_if.drv_mp vif;
 
   // Periodo do clock
-  time clk_period;
+  realtime clk_period;
 
   // Estado de habilitacao do clock
   bit clk_enable;

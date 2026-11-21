@@ -139,9 +139,22 @@ class minisoc_env extends uvm_env;
     super.connect_phase(phase);
 
 
-    // Conecta os sequencers dos agentes ao Virtual Sequencer
-    virtual_sequencer.clk_sqr = clk_agent.sqr;
-    virtual_sequencer.rst_sqr = rst_agent.sqr;
+    // Conecta o sequencer de Clock ao Virtual Sequencer
+    if (cfg.has_clk_agent &&
+        cfg.clk_agt_mode == UVM_ACTIVE) begin
+
+      virtual_sequencer.clk_sqr = clk_agent.sqr;
+
+    end
+
+
+    // Conecta o sequencer de Reset ao Virtual Sequencer
+    if (cfg.has_rst_agent &&
+        cfg.rst_agt_mode == UVM_ACTIVE) begin
+
+      virtual_sequencer.rst_sqr = rst_agent.sqr;
+
+    end
 
 
     // Conecta o sequencer SPI quando o Agent estiver ativo
@@ -181,15 +194,19 @@ class minisoc_env extends uvm_env;
 
 
     // Conecta os monitores ao Subscriber
-    if (cfg.has_mem_agent) begin
+    if (cfg.has_subscriber) begin
 
-      mem_agent.mon.ap.connect(sub.mem_export);
+      if (cfg.has_mem_agent) begin
 
-    end
+        mem_agent.mon.ap.connect(sub.mem_export);
 
-    if (cfg.has_spi_agent) begin
+      end
 
-      spi_agent.mon.item_collected_port.connect(sub.spi_export);
+      if (cfg.has_spi_agent) begin
+
+        spi_agent.mon.item_collected_port.connect(sub.spi_export);
+
+      end
 
     end
 

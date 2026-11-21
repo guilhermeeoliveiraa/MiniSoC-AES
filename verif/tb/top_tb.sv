@@ -27,8 +27,7 @@ module tb_top;
   );
 
   // Instanciação do módulo de assertions
-
-  top_assertions u_top_assertions(
+  top_assertions assertions(
     .clk(clk_vif.clk),
     .rst_n(rst_vif.rst_n),
     .spi_cs_n(spi_vif.cs_n),

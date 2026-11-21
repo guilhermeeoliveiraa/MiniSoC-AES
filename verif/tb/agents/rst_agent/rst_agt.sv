@@ -15,9 +15,6 @@ class rst_agt extends uvm_agent;
   // Porta de analise para publicar as transacoes observadas
   uvm_analysis_port #(rst_item) item_collected_port;
 
-  // Define se o Agent sera ativo ou passivo
-  uvm_active_passive_enum is_active = UVM_ACTIVE;
-
 
   // Construtor
   function new(string name = "rst_agt",

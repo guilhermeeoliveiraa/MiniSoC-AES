@@ -11,5 +11,7 @@ package rst_agent_pkg;
   // Sequencias
   `include "seq_lib/rst_base_seq.sv"
   `include "seq_lib/rst_toggle_seq.sv"
+  `include "seq_lib/rst_start_seq.sv"
+  `include "seq_lib/rst_stop_seq.sv"
 
 endpackage : rst_agent_pkg

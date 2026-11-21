@@ -1,4 +1,3 @@
-
 class rst_toggle_seq extends rst_base_seq;
 
   `uvm_object_utils(rst_toggle_seq)
