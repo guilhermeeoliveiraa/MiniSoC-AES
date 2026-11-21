@@ -1,1 +1,0 @@
--w  -pipe -DVCSMX -DUVM_DPI_DO_TYPE_CHECK -fPIC -std=c++11 -Irefmod -I/home/joao.oliveira -I/home/joao.oliveira/cryptopp -O -I/Tools/synopsys/vcs/X-2025.06-SP2/include   
