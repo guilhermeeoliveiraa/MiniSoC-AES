@@ -1,0 +1,4 @@
+  CREATE_STREAM @0 {NAME:smoke_seq T:Transactions SCOPE:uvm_test_top.env.virtual_sequencer STREAM:1512}
+  CREATE_STREAM @0 {NAME:clk_rst_seq T:Transactions SCOPE:uvm_test_top.env.virtual_sequencer STREAM:1523}
+  CREATE_STREAM @0 {NAME:clk_seq T:Transactions SCOPE:uvm_test_top.env.clk_agent.sqr STREAM:1534}
+  CREATE_STREAM @0 {NAME:rst_seq T:Transactions SCOPE:uvm_test_top.env.rst_agent.sqr STREAM:1558}

@@ -1,66 +1,63 @@
 module tb_top;
+
   import uvm_pkg::*;
   import minisoc_test_pkg::*;
+
   `include "uvm_macros.svh"
 
+  // Instanciação das interfaces
   clk_if clk_vif();
+  rst_if rst_vif();
+  spi_if spi_vif();
+  mem_data_if mem_vif();
 
-  rst_if rst_vif(
-    .clk(clk_vif.clk)
-  );
-
-  wire clk = clk_vif.clk;
-  wire rst_n = rst_vif.rst_n;
-
-  spi_if spi_vif(
-    .clk(clk),
-    .rst_n(rst_n)
-  );
-
-  mem_data_if mem_vif(
-    .clk(clk),
-    .rst_n(rst_n)
-  );
-
+  // Instanciação do DUT
   minisoc_top dut(
-    .clk(clk),
-    .rst_n(rst_n),
+    .clk(clk_vif.clk),
+    .rst_n(rst_vif.rst_n),
     .spi_sclk(spi_vif.sclk),
     .spi_cs_n(spi_vif.cs_n),
     .spi_mosi(spi_vif.mosi),
     .spi_miso(spi_vif.miso),
-    .mem_clk(clk),
-    .mem_i_data(mem_vif.wdata),
-    .mem_i_wr_en(mem_vif.en && mem_vif.we),
-    .mem_i_addr(mem_vif.addr),
-    .mem_o_data(mem_vif.rdata)
+    .mem_clk(mem_vif.mem_clk),
+    .mem_i_data(mem_vif.mem_i_data),
+    .mem_i_wr_en(mem_vif.mem_i_wr_en),
+    .mem_i_addr(mem_vif.mem_i_addr),
+    .mem_o_data(mem_vif.mem_o_data)
   );
 
+  // Instanciação do módulo de assertions
+
   top_assertions u_top_assertions(
-    .clk(clk),
-    .rst_n(rst_n),
+    .clk(clk_vif.clk),
+    .rst_n(rst_vif.rst_n),
     .spi_cs_n(spi_vif.cs_n),
     .spi_sclk(spi_vif.sclk)
   );
 
   initial begin
-    uvm_config_db#(virtual clk_if)::set(
-      null, "*", "clk_vif", clk_vif
-    );
 
-    uvm_config_db#(virtual rst_if)::set(
-      null, "*", "rst_vif", rst_vif
-    );
+    // Resgistrando as interfaces no banco de configuração do UVM
+    // Os componentes acessem as IF usando get()
 
-    uvm_config_db#(virtual spi_if)::set(
-      null, "*", "spi_vif", spi_vif
-    );
+    // Registra a interface de Clock
+    uvm_config_db#(virtual clk_if.drv_mp)::set(null, "*", "clk_drv_vif", clk_vif);
+    uvm_config_db#(virtual clk_if.mon_mp)::set(null, "*", "clk_mon_vif", clk_vif);
 
-    uvm_config_db#(virtual mem_data_if)::set(
-      null, "*", "mem_vif", mem_vif
-    );
+    // Registra a interface de Reset
+    uvm_config_db#(virtual rst_if.drv_mp)::set(null, "*", "rst_drv_vif", rst_vif);
+    uvm_config_db#(virtual rst_if.mon_mp)::set(null, "*", "rst_mon_vif", rst_vif);
 
+    // Registra as interfaces de SPI
+    uvm_config_db#(virtual spi_if.drv_mp)::set(null, "*", "spi_drv_vif", spi_vif);
+    uvm_config_db#(virtual spi_if.mon_mp)::set(null, "*", "spi_mon_vif", spi_vif);
+
+    // Registra as interfaces de Memoria  
+    uvm_config_db#(virtual mem_data_if.drv_mp)::set(null, "*", "mem_data_drv_vif", mem_vif);
+    uvm_config_db#(virtual mem_data_if.mon_mp)::set(null, "*", "mem_data_mon_vif", mem_vif);
+  
     run_test();
+    
   end
 
   initial begin

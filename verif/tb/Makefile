@@ -1,11 +1,14 @@
 include Makefile.files
 
-.PHONY: all vcs_comp vcs_run vcs_verdi vcs_wave vcs_gui vcs_cov help clean
+.PHONY: all vcs_comp vcs_run vcs_verdi vcs_wave vcs_gui vcs_cov help clean source
 
 #UVM_TEST ?= minisoc_rst_clk_test
 UVM_TEST ?= minisoc_smoke_test
 
 all: vcs_comp vcs_run
+
+source:
+	source /Tools/synopsys-scripts/snps.sh
 
 vcs_comp:
 	vcs $(VCS_FLAGS) $(VCS_CPP_FLAGS) $(VERDI_PLI) \

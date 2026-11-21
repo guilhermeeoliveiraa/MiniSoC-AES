@@ -11,10 +11,10 @@ MINISOC_TOP_FILES = \
 	$(RTL_DIR)/minisoc_top.sv \
 
 MINISOC_TB_IFS = \
-	$(TB_DIR)/if/clk_if.sv \
-	$(TB_DIR)/if/rst_if.sv \
-	$(TB_DIR)/if/spi_if.sv \
-	$(TB_DIR)/if/mem_data_if.sv \
+	$(TB_DIR)/agents/clk_agent/clk_if.sv \
+	$(TB_DIR)/agents/rst_agent/rst_if.sv \
+	$(TB_DIR)/agents/spi_agent/spi_if.sv \
+	$(TB_DIR)/agents/mem_data_agent/mem_data_if.sv \
 
 MINISOC_TB_PKGS = \
 	$(TB_DIR)/agents/clk_agent/clk_agent_pkg.sv \
@@ -22,7 +22,6 @@ MINISOC_TB_PKGS = \
 	$(TB_DIR)/agents/spi_agent/spi_agent_pkg.sv \
 	$(TB_DIR)/agents/mem_data_agent/mem_data_agent_pkg.sv \
 	$(TB_DIR)/env/minisoc_env_pkg.sv \
-	$(TB_DIR)/sequences/minisoc_seq_pkg.sv \
 	$(TB_DIR)/tests/minisoc_test_pkg.sv \
 
 MINISOC_TOP_TB = \
@@ -38,8 +37,8 @@ VCS_INCDIRS = \
 	+incdir+$(TB_DIR)/agents/spi_agent \
 	+incdir+$(TB_DIR)/agents/mem_data_agent \
 	+incdir+$(TB_DIR)/env \
-	+incdir+$(TB_DIR)/sequences \
-	+incdir+$(TB_DIR)/tests
+	+incdir+$(TB_DIR)/tests \
+	+incdir+$(TB_DIR)/tests/seqs
 
 VCS_KDB       = -kdb
 VERDI_HOME   ?= /Tools/synopsys/verdi/X-2025.06-SP2
