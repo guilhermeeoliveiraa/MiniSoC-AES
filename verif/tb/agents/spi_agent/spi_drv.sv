@@ -55,8 +55,17 @@ class spi_drv extends uvm_driver #(spi_item);
       // Executa a transferência SPI
       drive_transfer(item);
 
-      // Informa ao Sequencer que a transação foi concluída
-      seq_item_port.item_done();
+      // Cria o objeto de resposta
+      rsp = spi_item::type_id::create("rsp");
+
+      // Copia a identificacao da transacao
+      rsp.set_id_info(item);
+
+      // Retorna os dados recebidos pelo MISO
+      rsp.rx_data = item.rx_data;
+
+      // Informa fim da transação e retorna a resposta
+      seq_item_port.item_done(rsp);
 
     end
 

@@ -11,6 +11,8 @@ package mem_data_agent_pkg;
   // Sequencias
   `include "seq_lib/mem_data_base_seq.sv"
   `include "seq_lib/mem_data_write_seq.sv"
+  `include "seq_lib/mem_data_write_block_seq.sv"
   `include "seq_lib/mem_data_read_seq.sv"
+  `include "seq_lib/mem_data_read_block_seq.sv"
 
 endpackage : mem_data_agent_pkg

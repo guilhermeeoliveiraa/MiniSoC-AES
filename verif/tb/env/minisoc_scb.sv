@@ -42,8 +42,16 @@ class minisoc_scb extends uvm_scoreboard;
 
 
   // Resultados esperados
+  bit [127:0] expected_block;
   bit [31:0] expected_words[$];
   int unsigned expected_addresses[$];
+
+
+  // Bloco recebido do DUT
+  bit [127:0] dut_block;
+
+  // Controle de validade das palavras recebidas
+  bit [3:0] dut_word_valid;
 
 
   // Contadores de verificacao
@@ -73,6 +81,10 @@ class minisoc_scb extends uvm_scoreboard;
 
     mem_sel_aes = 1'b0;
 
+    expected_block = '0;
+    dut_block = '0;
+    dut_word_valid = '0;
+
     match_count = 0;
     mismatch_count = 0;
     refmodel_count = 0;
@@ -82,8 +94,6 @@ class minisoc_scb extends uvm_scoreboard;
 
   // Recebe e processa transacoes SPI
   function void write_spi(spi_item item);
-
-    bit [127:0] expected_block;
 
     // Considera somente transacoes de escrita
     if (item.op != spi_item::SPI_WRITE)
@@ -148,6 +158,9 @@ class minisoc_scb extends uvm_scoreboard;
             expected_words.delete();
             expected_addresses.delete();
 
+            dut_block = '0;
+            dut_word_valid = '0;
+
           end
 
 
@@ -206,6 +219,11 @@ class minisoc_scb extends uvm_scoreboard;
           expected_addresses.push_back(3);
 
 
+          // Inicializa o bloco recebido do DUT
+          dut_block = '0;
+          dut_word_valid = '0;
+
+
           // Atualiza o contador de chamadas ao modelo
           refmodel_count++;
 
@@ -250,8 +268,6 @@ class minisoc_scb extends uvm_scoreboard;
   function void write_mem(mem_data_item item);
 
     int match_idx;
-
-    bit [31:0] expected_word;
 
 
     // Ignora transacoes sem habilitacao
@@ -360,8 +376,33 @@ class minisoc_scb extends uvm_scoreboard;
     end
 
 
-    // Recupera o resultado esperado para o endereco
-    expected_word = expected_words[match_idx];
+    // Armazena a palavra recebida na posicao correspondente
+    case (item.addr)
+
+      10'd0: begin
+        dut_block[127:96] = item.rdata;
+        dut_word_valid[0] = 1'b1;
+      end
+
+      10'd1: begin
+        dut_block[95:64] = item.rdata;
+        dut_word_valid[1] = 1'b1;
+      end
+
+      10'd2: begin
+        dut_block[63:32] = item.rdata;
+        dut_word_valid[2] = 1'b1;
+      end
+
+      10'd3: begin
+        dut_block[31:0] = item.rdata;
+        dut_word_valid[3] = 1'b1;
+      end
+
+      default: begin
+      end
+
+    endcase
 
 
     // Remove somente o resultado correspondente
@@ -369,35 +410,44 @@ class minisoc_scb extends uvm_scoreboard;
     expected_addresses.delete(match_idx);
 
 
-    // Compara o resultado do DUT com o modelo de referencia
-    if (item.rdata === expected_word) begin
+    // Aguarda a leitura das quatro palavras do bloco
+    if (dut_word_valid == 4'b1111) begin
 
-      match_count++;
+      // Compara o bloco completo de 128 bits
+      if (dut_block === expected_block) begin
 
-      `uvm_info("SCB_MATCH",
-        $sformatf(
-          "[SCB_MATCH] PASS | Addr: 0x%03h | DUT: %08h | REF: %08h",
-          item.addr,
-          item.rdata,
-          expected_word
-        ),
-        UVM_LOW)
+        match_count++;
 
-    end
-    else begin
+        `uvm_info("SCB_BLOCK_MATCH",
+          $sformatf(
+            "[SCB_BLOCK_MATCH] PASS | Bloco AES: DUT: %032h | REF: %032h",
+            dut_block,
+            expected_block
+          ),
+          UVM_LOW)
 
-      mismatch_count++;
+      end
+      else begin
 
-      `uvm_error("SCB_MISMATCH",
-        $sformatf(
-          "[SCB_MISMATCH] Divergencia detectada\n\
-           Endereco  : 0x%03h\n\
-           DUT       : %08h\n\
-           Ref Model : %08h",
-          item.addr,
-          item.rdata,
-          expected_word
-        ))
+        mismatch_count++;
+
+        `uvm_error("SCB_BLOCK_MISMATCH",
+          $sformatf(
+            "[SCB_BLOCK_MISMATCH] Divergencia no bloco AES de 128 bits\n\
+             DUT      : %032h\n\
+             Ref Model: %032h\n\
+             Diferenca: %032h",
+            dut_block,
+            expected_block,
+            dut_block ^ expected_block
+          ))
+
+      end
+
+
+      // Prepara o controle para o proximo bloco
+      dut_block = '0;
+      dut_word_valid = '0;
 
     end
 
@@ -435,13 +485,27 @@ class minisoc_scb extends uvm_scoreboard;
     end
 
 
+    // Verifica se existe um bloco recebido parcialmente
+    if (dut_word_valid != 4'b0000) begin
+
+      `uvm_error("SCB_INCOMPLETE_BLOCK",
+        $sformatf(
+          "Bloco incompleto recebido do DUT | Mascara de validade: %04b | DUT: %032h",
+          dut_word_valid,
+          dut_block
+        ))
+
+    end
+
+
     // Determina o resultado final
     result = (
       refmodel_count > 0 &&
       match_count > 0 &&
       mismatch_count == 0 &&
       expected_words.size() == 0 &&
-      expected_addresses.size() == 0
+      expected_addresses.size() == 0 &&
+      dut_word_valid == 4'b0000
     ) ? "PASS" : "FAIL";
 
 
@@ -450,17 +514,19 @@ class minisoc_scb extends uvm_scoreboard;
       $sformatf(
         "\n========== RESUMO DO SCOREBOARD ==========\n\
          Modelo de referencia : %0d\n\
-         Comparacoes aprovadas: %0d\n\
-         Divergencias         : %0d\n\
-         Palavras pendentes   : %0d\n\
-         Enderecos pendentes  : %0d\n\
-         Resultado            : %s\n\
+         Blocos aprovados    : %0d\n\
+         Divergencias        : %0d\n\
+         Palavras pendentes  : %0d\n\
+         Enderecos pendentes : %0d\n\
+         Bloco parcial       : %04b\n\
+         Resultado           : %s\n\
          =========================================",
         refmodel_count,
         match_count,
         mismatch_count,
         expected_words.size(),
         expected_addresses.size(),
+        dut_word_valid,
         result
       ),
       UVM_NONE)

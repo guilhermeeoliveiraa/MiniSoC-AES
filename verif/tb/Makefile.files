@@ -21,6 +21,7 @@ MINISOC_TB_PKGS = \
 	$(TB_DIR)/agents/rst_agent/rst_agent_pkg.sv \
 	$(TB_DIR)/agents/spi_agent/spi_agent_pkg.sv \
 	$(TB_DIR)/agents/mem_data_agent/mem_data_agent_pkg.sv \
+	$(TB_DIR)/env/minisoc_reg_pkg.sv \
 	$(TB_DIR)/env/minisoc_env_pkg.sv \
 	$(TB_DIR)/tests/minisoc_test_pkg.sv \
 

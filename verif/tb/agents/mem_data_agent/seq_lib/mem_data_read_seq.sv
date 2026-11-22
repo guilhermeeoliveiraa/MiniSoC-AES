@@ -1,9 +1,13 @@
+
 class mem_data_read_seq extends mem_data_base_seq;
 
   `uvm_object_utils(mem_data_read_seq)
 
   // Endereco da memoria que sera lido
   rand logic [9:0] addr;
+
+  // Dado retornado pela memoria
+  logic [31:0] rdata;
 
 
   // Construtor
@@ -18,6 +22,7 @@ class mem_data_read_seq extends mem_data_base_seq;
   task body();
 
     mem_data_item item;
+    mem_data_item rsp;
 
     // Cria o item de leitura
     item = mem_data_item::type_id::create("read_item");
@@ -33,6 +38,12 @@ class mem_data_read_seq extends mem_data_base_seq;
 
     // Finaliza a transferencia
     finish_item(item);
+
+    // Recebe a resposta do Driver
+    get_response(rsp);
+
+    // Armazena o dado lido
+    rdata = rsp.rdata;
 
   endtask : body
 

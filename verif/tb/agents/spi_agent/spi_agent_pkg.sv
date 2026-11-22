@@ -12,5 +12,8 @@ package spi_agent_pkg;
   `include "seq_lib/spi_base_seq.sv"
   `include "seq_lib/spi_start_aes_seq.sv"
   `include "seq_lib/spi_read_reg_seq.sv"
-  
+  `include "seq_lib/spi_write_reg_seq.sv"
+  `include "seq_lib/spi_wait_reg_seq.sv"
+  `include "seq_lib/spi_write_key_seq.sv"
+
 endpackage : spi_agent_pkg

@@ -6,7 +6,7 @@ class mem_data_drv extends uvm_driver #(mem_data_item);
   // Interface virtual utilizada pelo Driver
   virtual mem_data_if.drv_mp vif;
 
-  // Período do clock da memória
+  // Periodo do clock da memoria
   time mem_clk_period = 20ns;
 
   // Item recebido do Sequencer
@@ -39,10 +39,12 @@ class mem_data_drv extends uvm_driver #(mem_data_item);
   endfunction : build_phase
 
 
-  // Aguarda e executa continuamente as transações
+  // Aguarda e executa continuamente as transacoes
   task run_phase(uvm_phase phase);
 
-    // Inicializa os sinais da memória
+    mem_data_item rsp;
+
+    // Inicializa os sinais da memoria
     vif.mem_clk     = 1'b0;
     vif.mem_i_data  = '0;
     vif.mem_i_wr_en = 1'b0;
@@ -50,48 +52,60 @@ class mem_data_drv extends uvm_driver #(mem_data_item);
 
     forever begin
 
-      // Recebe uma transação do Sequencer
+      // Recebe uma transacao do Sequencer
       seq_item_port.get_next_item(item);
 
-      // Executa a operação de memória
+      // Executa a operacao de memoria
       drive_transfer(item);
 
-      // Informa ao Sequencer que a transação foi concluída
-      seq_item_port.item_done();
+      // Cria a resposta da transacao
+      rsp = mem_data_item::type_id::create("rsp");
+
+      // Preserva a identificacao da requisicao
+      rsp.set_id_info(item);
+
+      // Retorna o dado lido
+      rsp.rdata = item.rdata;
+
+      // Finaliza a requisicao e retorna a resposta
+      seq_item_port.item_done(rsp);
 
     end
 
   endtask : run_phase
 
 
-  // Executa uma operação de leitura ou escrita na memória
+  // Executa uma operacao de leitura ou escrita na memoria
   task drive_transfer(mem_data_item tr);
 
-    // Verifica se existe uma operação solicitada
+    // Inicializa o dado de resposta
+    tr.rdata = '0;
+
+    // Verifica se existe uma operacao solicitada
     if (!tr.en) begin
       return;
     end
 
-    // Mantém o clock inicialmente em nível baixo
+    // Mantem o clock inicialmente em nivel baixo
     vif.mem_clk = 1'b0;
 
-    // Apresenta o endereço e os dados na interface
+    // Apresenta o endereco e os dados na interface
     vif.mem_i_addr = tr.addr;
     vif.mem_i_data = tr.wdata;
 
-    // Define se a operação será de leitura ou escrita
+    // Define se a operacao sera de leitura ou escrita
     vif.mem_i_wr_en = tr.we;
 
     // Aguarda antes da borda ativa do clock
     #(mem_clk_period / 2);
 
-    // Borda de subida do clock da memória
+    // Borda de subida do clock da memoria
     vif.mem_clk = 1'b1;
 
-    // Aguarda o processamento da operação pela memória
+    // Aguarda o processamento da operacao pela memoria
     #(mem_clk_period / 2);
 
-    // Captura o dado de saída em caso de leitura
+    // Captura o dado de saida somente em operacoes de leitura
     if (!tr.we) begin
 
       tr.rdata = vif.mem_o_data;

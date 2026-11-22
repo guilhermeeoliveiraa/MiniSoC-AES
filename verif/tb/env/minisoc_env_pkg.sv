@@ -2,6 +2,7 @@ package minisoc_env_pkg;
   import uvm_pkg::*;
   `include "uvm_macros.svh"
 
+  import minisoc_reg_pkg::*;
   import clk_agent_pkg::*;
   import rst_agent_pkg::*;
   import spi_agent_pkg::*;

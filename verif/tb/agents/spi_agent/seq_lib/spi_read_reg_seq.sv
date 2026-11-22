@@ -5,12 +5,13 @@ class spi_read_reg_seq extends spi_base_seq;
   // Endereco do registrador que sera lido
   rand logic [5:0] addr;
 
+  // Dados recebidos do registrador
+  logic [31:0] data;
+
 
   // Construtor
   function new(string name = "spi_read_reg_seq");
-
     super.new(name);
-
   endfunction : new
 
 
@@ -18,6 +19,7 @@ class spi_read_reg_seq extends spi_base_seq;
   task body();
 
     spi_item item;
+    spi_item rsp;
 
     // Primeira transferencia: solicita a leitura do endereco
     item = spi_item::type_id::create("read_request_item");
@@ -43,6 +45,12 @@ class spi_read_reg_seq extends spi_base_seq;
     item.data     = '0;
 
     finish_item(item);
+
+    // Recupera a resposta enviada pelo Driver
+    get_response(rsp);
+
+    // Armazena os dados recebidos do registrador
+    data = rsp.rx_data;
 
   endtask : body
 
