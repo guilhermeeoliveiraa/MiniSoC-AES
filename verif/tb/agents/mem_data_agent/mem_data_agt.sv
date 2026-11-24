@@ -13,7 +13,7 @@ class mem_data_agt extends uvm_agent;
   mem_data_sqr sqr;
 
   // Porta de análise para disponibilizar as transações observadas
-  uvm_analysis_port #(mem_data_item) ap;
+  uvm_analysis_port #(mem_data_item) item_collected_port;
 
 
   // Construtor
@@ -41,7 +41,7 @@ class mem_data_agt extends uvm_agent;
     end
 
     // Cria a porta de análise
-    ap = new("ap", this);
+    item_collected_port = new("item_collected_port", this);
 
     // Cria o Monitor
     mon = mem_data_mon::type_id::create("mon", this);
@@ -86,7 +86,7 @@ class mem_data_agt extends uvm_agent;
     super.connect_phase(phase);
 
     // Conecta a porta de análise do Monitor ao Agent
-    mon.ap.connect(ap);
+    mon.item_collected_port.connect(item_collected_port);
 
     // Conecta o Driver ao Sequencer
     if (get_is_active() == UVM_ACTIVE) begin

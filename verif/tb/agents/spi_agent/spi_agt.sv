@@ -15,7 +15,7 @@ class spi_agt extends uvm_agent;
   uvm_active_passive_enum is_active = UVM_ACTIVE;
 
   // Porta de análise para disponibilizar as transações observadas
-  uvm_analysis_port #(spi_item) ap;
+  uvm_analysis_port #(spi_item) item_collected_port;
 
 
   // Construtor
@@ -43,7 +43,7 @@ class spi_agt extends uvm_agent;
     end
 
     // Cria a porta de análise
-    ap = new("ap", this);
+    item_collected_port = new("item_collected_port", this);
 
     // Cria o Monitor
     mon = spi_mon::type_id::create("mon", this);
@@ -87,8 +87,9 @@ class spi_agt extends uvm_agent;
     super.connect_phase(phase);
 
     // Conecta a porta de análise do Monitor ao Agent
-    mon.item_collected_port.connect(ap);
+    mon.item_collected_port.connect(item_collected_port);
 
+    // Conecta o Driver ao Sequencer
     if (get_is_active() == UVM_ACTIVE) begin
 
       // Conecta o Driver ao Sequencer

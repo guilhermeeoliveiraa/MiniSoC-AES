@@ -180,13 +180,13 @@ class minisoc_env extends uvm_env;
 
       if (cfg.has_mem_agent) begin
 
-        mem_agent.mon.ap.connect(scb.mem_export);
+        mem_agent.item_collected_port.connect(scb.mem_export);
 
       end
 
       if (cfg.has_spi_agent) begin
 
-        spi_agent.mon.item_collected_port.connect(scb.spi_export);
+        spi_agent.item_collected_port.connect(scb.spi_export);
 
       end
 
@@ -198,13 +198,13 @@ class minisoc_env extends uvm_env;
 
       if (cfg.has_mem_agent) begin
 
-        mem_agent.mon.ap.connect(sub.mem_export);
+        mem_agent.item_collected_port.connect(sub.mem_export);
 
       end
 
       if (cfg.has_spi_agent) begin
 
-        spi_agent.mon.item_collected_port.connect(sub.spi_export);
+        spi_agent.item_collected_port.connect(sub.spi_export);
 
       end
 
