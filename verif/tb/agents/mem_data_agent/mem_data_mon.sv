@@ -7,7 +7,7 @@ class mem_data_mon extends uvm_monitor;
   virtual mem_data_if.mon_mp vif;
 
   // Porta de análise para publicar as transações observadas
-  uvm_analysis_port #(mem_data_item) ap;
+  uvm_analysis_port #(mem_data_item) item_collected_port;
 
 
   // Construtor
@@ -16,7 +16,7 @@ class mem_data_mon extends uvm_monitor;
 
     super.new(name, parent);
 
-    ap = new("ap", this);
+    item_collected_port = new("item_collected_port", this);
 
   endfunction : new
 
@@ -95,7 +95,7 @@ class mem_data_mon extends uvm_monitor;
       end
 
       // Publica a transação observada
-      ap.write(item);
+      item_collected_port.write(item);
 
     end
 

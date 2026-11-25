@@ -1,7 +1,7 @@
 .PHONY: all vcs_comp vcs_run vcs_gui vcs_cov vcs_verdi vcs_wave help clean
 
 # Teste UVM padrao
-UVM_TEST ?= minisoc_smoke_test
+UVM_TEST ?= minisoc_random_test
 
 # Diretorio da verificacao
 TB_DIR := verif/tb

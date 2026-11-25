@@ -54,13 +54,13 @@ class minisoc_smoke_vseq extends minisoc_base_vseq;
     // Configura a quantidade de blocos para processamento
     reg_seq = spi_write_reg_seq::type_id::create("reg_seq");
     reg_seq.addr = REG_NUM_BLOCKS;
-    reg_seq.data = 32'h00000001;   // 1 bloco
+    reg_seq.data = NUM_BLOCKS_MIN;   // 1 bloco
     reg_seq.start(p_sequencer.spi_sqr);
 
     // Configura modo de operacao do AES
     reg_seq = spi_write_reg_seq::type_id::create("reg_seq");
     reg_seq.addr = REG_AES_CONTROL;
-    reg_seq.data = 32'h00000000;   // MODE = ECB, DECRYPT = 0, START = 0
+    reg_seq.data = AES_MODE_ECB_REG | AES_ENCRYPT;
     reg_seq.start(p_sequencer.spi_sqr);
 
     // Define a chave de criptografia
@@ -72,12 +72,24 @@ class minisoc_smoke_vseq extends minisoc_base_vseq;
     // Inicialização do PLL
     // --------------------------------------------------
 
-    // Habilita o PLL do MiniSoC
+    // Configura e Habilita o PLL do MiniSoC
     reg_seq = spi_write_reg_seq::type_id::create("reg_seq");
     reg_seq.addr = REG_SYSTEM_CONTROL;
-    reg_seq.data = 32'h00000002;  // MEM_SEL_AES = 0, PLL_ENABLE = 1
+    reg_seq.data = MEM_SEL_EXT | PLL_ENABLE | PLL_DIV_1;  
     reg_seq.start(p_sequencer.spi_sqr);
 
+    // --------------------------------------------------
+    // Aguardar PLL_LOCKED
+    // --------------------------------------------------
+
+    wait_seq = spi_wait_reg_seq::type_id::create("wait_pll_locked_seq");
+
+    wait_seq.addr = REG_SYSTEM_STATUS;
+    wait_seq.mask     = PLL_LOCKED_MASK;
+    wait_seq.expected = PLL_LOCKED; 
+
+    wait_seq.start(p_sequencer.spi_sqr);    
+    
     // --------------------------------------------------
     // Transferência de ownership
     // --------------------------------------------------
@@ -85,7 +97,7 @@ class minisoc_smoke_vseq extends minisoc_base_vseq;
     // Transfere o ownership da memoria para o AES
     reg_seq = spi_write_reg_seq::type_id::create("reg_seq");
     reg_seq.addr = REG_SYSTEM_CONTROL;
-    reg_seq.data = 32'h00000003;  // MEM_SEL_AES = 1, PLL_ENABLE = 1
+    reg_seq.data = MEM_SEL_AES | PLL_ENABLE | PLL_DIV_1;
     reg_seq.start(p_sequencer.spi_sqr);
 
     // --------------------------------------------------
@@ -94,7 +106,7 @@ class minisoc_smoke_vseq extends minisoc_base_vseq;
 
     // Inicia a operacao AES
     reg_seq.addr = REG_AES_CONTROL;
-    reg_seq.data = 32'h00000001;  // START = 1
+    reg_seq.data = AES_MODE_ECB_REG | AES_ENCRYPT | AES_START_CMD;
     reg_seq.start(p_sequencer.spi_sqr);
 
     // --------------------------------------------------
@@ -105,19 +117,29 @@ class minisoc_smoke_vseq extends minisoc_base_vseq;
     // Registrador AES_STATUS
     wait_seq.addr = REG_AES_STATUS;
     // Configura a verificacao do bit DONE
-    wait_seq.mask     = 32'h00000002;
-    wait_seq.expected = 32'h00000002;
+    wait_seq.mask     = AES_DONE_MASK;
+    wait_seq.expected = AES_DONE_SET; 
     // Executa a espera
     wait_seq.start(p_sequencer.spi_sqr);
 
     // --------------------------------------------------
-    // Recuperação da memória externa
+    // Verificar ausencia de erro
+    // --------------------------------------------------
+
+    //wait_seq = spi_wait_reg_seq::type_id::create("wait_aes_no_error_seq");
+    //wait_seq.addr = REG_AES_STATUS;
+    //wait_seq.mask     = AES_ERROR_MASK;
+    //wait_seq.expected = AES_NO_ERROR;
+    //wait_seq.start(p_sequencer.spi_sqr);
+
+    // --------------------------------------------------
+    // Devolve ownership para memória externa
     // --------------------------------------------------
 
     // Devolve a propriedade da memoria ao controle externo
     reg_seq = spi_write_reg_seq::type_id::create("reg_seq");
     reg_seq.addr = REG_SYSTEM_CONTROL;
-    reg_seq.data = 32'h00000002; // MEM_SEL_AES=0, PLL_ENABLE=1
+    reg_seq.data = MEM_SEL_EXT | PLL_ENABLE | PLL_DIV_1;
     reg_seq.start(p_sequencer.spi_sqr);
 
     // --------------------------------------------------

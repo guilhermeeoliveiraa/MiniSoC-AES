@@ -19,7 +19,7 @@ class minisoc_smoke_test extends minisoc_base_test;
     // Mantem a simulacao ativa durante a execucao do teste
     phase.raise_objection(this);
 
-    // Cria a sequencia virtual de verificacao inicial
+    // Cria a sequencia virtual de verificacao
     smoke_seq = minisoc_smoke_vseq::type_id::create("smoke_seq");
 
     // Inicia a sequencia virtual no Virtual Sequencer

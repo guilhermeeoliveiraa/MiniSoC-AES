@@ -15,6 +15,8 @@ package minisoc_env_pkg;
   `include "vseq_lib/minisoc_base_vseq.sv"
   `include "vseq_lib/minisoc_clk_rst_vseq.sv"
   `include "vseq_lib/minisoc_smoke_vseq.sv"
+  `include "vseq_lib/minisoc_operation_vseq.sv"
+  `include "vseq_lib/minisoc_random_vseq.sv"
 
   // Componentes de verificacao
   `include "minisoc_env_config.sv"

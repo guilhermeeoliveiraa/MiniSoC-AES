@@ -11,5 +11,6 @@
     `include "minisoc_base_test.sv"
     `include "minisoc_clk_rst_test.sv"
     `include "minisoc_smoke_test.sv"
+    `include "minisoc_random_test.sv"
 
   endpackage : minisoc_test_pkg   
